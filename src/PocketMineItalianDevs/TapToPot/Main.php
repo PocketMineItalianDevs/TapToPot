@@ -4,7 +4,7 @@
  * PocketMineItalianDevs Plugin
  */
 
-namespace PocketmineItalianDevs\TapToPot;
+namespace PocketMineItalianDevs\TapToPot;
 
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
