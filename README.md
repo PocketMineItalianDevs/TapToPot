@@ -1,4 +1,6 @@
 # TapToPot
+[![HitCount](http://hits.dwyl.com/PocketMineItalianDevs/TapToPot.svg)](http://hits.dwyl.com/PocketMineItalianDevs/TapToPot)
+[![Poggit](https://poggit.pmmp.io/ci.shield/PocketMineItalianDevs/TapToPot/~)](https://poggit.pmmp.io/ci/PocketMineItalianDevs/TapToPot/~)
 This simple plugin allows you to make potions much faster.
 ### Features:
 - You can choose in which world the plugin is going to work,
