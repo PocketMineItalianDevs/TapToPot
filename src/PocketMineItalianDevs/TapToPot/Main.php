@@ -84,10 +84,7 @@ class Main extends PluginBase implements Listener{
 								if($id === Item::SPLASH_POTION){
 									$player->getLevel()->broadcastLevelSoundEvent($player,LevelSoundEventPacket::SOUND_GLASS);
 								}
-								else{
-									//$player->getLevel()->broadcastLevelSoundEvent($player,LevelSoundEventPacket::SOUND_DRINK);
-									// What's the name of the sound when you drink a potion? if you know that open an issue and tell the sound name, Thanks!
-								}
+								//normal potions sound is client side!
 							}
 							break;
 						}
