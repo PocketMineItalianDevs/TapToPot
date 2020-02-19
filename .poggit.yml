@@ -4,5 +4,6 @@ branches:
 - master
 projects:
   TapToPot:
+    icon: "icon.png"
     path: ""
 ...
