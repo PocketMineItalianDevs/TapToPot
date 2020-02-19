@@ -6,6 +6,7 @@ This simple plugin allows you to make potions much faster.
 - You can choose in which world the plugin is going to work,
 - You can choose which potions work per world,
 - Command on/off/reload.
+- You can choose which kind of potion (splash/normal) you want the plugin to work on
 ### Commands:
 - /ttp on: enables plugin,
 - /ttp off: disables plugin,
