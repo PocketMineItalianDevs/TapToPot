@@ -1,0 +1,12 @@
+name: TapToPot
+author: PocketMineItalianDevs
+version: 0.0.1
+api: [3.0.0]
+main: PocketMineItalianDevs\TapToPot\Main
+commands:
+  ttp:
+    description: "(on/off/reload) allow you to enable/disable the plugin"
+permissions:
+  ttp.command:
+    description: "allow you to use /ttp command"
+    default: op
