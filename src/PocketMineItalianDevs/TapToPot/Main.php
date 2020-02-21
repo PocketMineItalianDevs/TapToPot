@@ -17,15 +17,16 @@ use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\TextFormat;
+use function array_keys;
+use function in_array;
 
 class Main extends PluginBase implements Listener{
 
-	/** @var bool */
-	private $on;
+	/** @var string */
+	private const PREFIX = 'TapToPot : ';
 
 	public function onEnable(){
 		$this->getServer()->getPluginManager()->registerEvents($this,$this);
-		$this->on = $this->getConfig()->get('enable-plugin');
 	}
 
 	/**
@@ -40,27 +41,29 @@ class Main extends PluginBase implements Listener{
 		if($sender instanceof Player and $sender->hasPermission('ttp.command')){
 			if($command->getName() === 'ttp'){
 				if($args[0] === 'on'){
-					$sender->sendMessage(TextFormat::GREEN.'Plugin enabled!');
-					$this->on = true;
+					$sender->sendMessage(TextFormat::GREEN . self::PREFIX . 'Plugin enabled!');
+					$this->getConfig()->set('enable-plugin', true);
+					$this->getConfig()->save();
 				}elseif($args[0] === 'off'){
-					$sender->sendMessage(TextFormat::GOLD.'Plugin disabled!');
-					$this->on = false;
+					$sender->sendMessage(TextFormat::GOLD . self::PREFIX . 'Plugin disabled!');
+					$this->getConfig()->set('enable-plugin', false);
+					$this->getConfig()->save();
 				}elseif($args[0] === 'reload'){
 					$this->reloadConfig();
-					$sender->sendMessage(TextFormat::GREEN.'Reloaded succesfuly');
+					$sender->sendMessage(TextFormat::GREEN . self::PREFIX . 'Reloaded succesfuly');
 				}else{
-					$sender->sendMessage(TextFormat::RED . 'Utilizza /ttp <on/off/reload>');
+					$sender->sendMessage(TextFormat::RED . self::PREFIX . 'Use /ttp <on/off/reload>');
 				}
-				$this->getConfig()->set('enable-plugin',$this->on);
 			}
 		}
+		return true;
 	}
 
 	/**
 	 * @param PlayerJoinEvent $event
 	 */
 	public function onJoin(PlayerJoinEvent $event){
-		if(!$this->on and $event->getPlayer()->hasPermission('ttp.command')) $event->getPlayer()->sendMessage(TextFormat::RED.'The plugin is currently disabled!');
+		if(!$this->getConfig()->get('enable-plugin', true) and $event->getPlayer()->hasPermission('ttp.command')) $event->getPlayer()->sendMessage(TextFormat::RED . self::PREFIX . 'The plugin is currently disabled!');
 	}
 
 	/**
@@ -71,26 +74,14 @@ class Main extends PluginBase implements Listener{
 		$item = $event->getItem();
 		$meta = $item->getDamage();
 		$id = $item->getId();
-		if(($id === Item::SPLASH_POTION and $this->getConfig()->get('enable-splash-potion')) or ($id === Item::POTION and $this->getConfig()->get('enable-potion')) and $this->on){
-			foreach($this->getConfig()->get('active-on') as $worlds => $potions){
-				if($player->getLevel()->getFolderName() === $worlds){
-					foreach($potions as $potion){
-						if($meta === $potion){
-							$effect = Potion::getPotionEffectsById($meta);
-							if(isset($effect[0])){
-								$event->setCancelled(true);
-								$player->addEffect($effect[0]);
-								$player->getInventory()->setItemInHand(Item::get(Item::AIR));
-								if($id === Item::SPLASH_POTION){
-									$player->getLevel()->broadcastLevelSoundEvent($player,LevelSoundEventPacket::SOUND_GLASS);
-								}
-								//normal potions sound is client side!
-							}
-							break;
-						}
-					}
-					break;
-				}
+		if((($id === Item::SPLASH_POTION and $this->getConfig()->get('enable-splash-potion')) or ($id === Item::POTION and $this->getConfig()->get('enable-potion'))) and $this->getConfig()->get('enable-plugin', true)){
+			if(in_array($player->getLevel()->getFolderName(), array_keys($this->getConfig()->get('active-on')), true) and in_array($meta, $this->getConfig()->get('active-on')[$player->getLevel()->getFolderName()], true)){
+				$effects = Potion::getPotionEffectsById($meta);
+				foreach($effects as $effect) $player->addEffect($effect);
+				$event->setCancelled(true);
+				$player->getInventory()->setItemInHand($item->setCount($item->getCount() - 1));
+				//normal potions sound is client side!
+				if($id === Item::SPLASH_POTION) $player->getLevel()->broadcastLevelSoundEvent($player, LevelSoundEventPacket::SOUND_GLASS);
 			}
 		}
 	}
