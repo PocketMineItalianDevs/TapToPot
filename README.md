@@ -1,6 +1,7 @@
 # TapToPot
 [![](https://poggit.pmmp.io/shield.state/TapToPot)](https://poggit.pmmp.io/p/TapToPot)
 [![](https://poggit.pmmp.io/shield.dl.total/TapToPot)](https://poggit.pmmp.io/p/TapToPot)
+
 This simple plugin allows you to make potions much faster.
 ### Features:
 - You can choose in which world the plugin is going to work,
